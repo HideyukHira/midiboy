@@ -1,3 +1,8 @@
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+using NAudio.Midi;
+
 namespace midiboy
 {
     internal static class Program
@@ -11,7 +16,11 @@ namespace midiboy
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+
+     
+
             Application.Run(new Form1());
         }
     }
+
 }
