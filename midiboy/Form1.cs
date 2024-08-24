@@ -135,10 +135,10 @@ namespace midiboy
             dataGridView.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Note Name", DataPropertyName = "NoteName" });
             dataGridView.Columns.Add(new DataGridViewComboBoxColumn { HeaderText = "Key", DataPropertyName = "Key", DataSource = Enum.GetValues(typeof(Keys)) });
 
-            saveButton = new Button { Text = "Save", Dock = DockStyle.Top };
+            saveButton = new Button { Text = "Save", Dock = DockStyle.Bottom, Height = 40 };
             saveButton.Click += SaveButton_Click;
 
-            loadButton = new Button { Text = "Load", Dock = DockStyle.Top };
+            loadButton = new Button { Text = "Load", Dock = DockStyle.Bottom, Height = 40 };
             loadButton.Click += LoadButton_Click;
 
             Controls.Add(dataGridView);

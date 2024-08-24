@@ -34,7 +34,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(613, 403);
+            textBox1.Location = new Point(719, 942);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(175, 35);
             textBox1.TabIndex = 0;
@@ -42,7 +42,7 @@
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(12, 400);
+            comboBox1.Location = new Point(12, 1007);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(212, 38);
             comboBox1.TabIndex = 1;
@@ -51,7 +51,7 @@
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1137, 1057);
             Controls.Add(comboBox1);
             Controls.Add(textBox1);
             Name = "Form1";
