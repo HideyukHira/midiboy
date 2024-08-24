@@ -34,7 +34,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(28, 380);
+            textBox1.Location = new Point(613, 403);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(175, 35);
             textBox1.TabIndex = 0;
@@ -42,7 +42,7 @@
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(12, 31);
+            comboBox1.Location = new Point(12, 400);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(212, 38);
             comboBox1.TabIndex = 1;
@@ -56,7 +56,6 @@
             Controls.Add(textBox1);
             Name = "Form1";
             Text = "Form1";
-            
             ResumeLayout(false);
             PerformLayout();
         }

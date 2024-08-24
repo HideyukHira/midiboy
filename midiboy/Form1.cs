@@ -9,10 +9,14 @@ namespace midiboy
     {
         private MidiIn midiIn;
         private ComboBox comboBoxMidi;
+        private DataGridView dataGridView;
+        private Button saveButton;
+        private Button loadButton;
 
         public Form1()
         {
             InitializeComponent();
+            InitializeCustomComponents();
             // comboBoxMidi へ comboBox1 を代入
             comboBoxMidi = comboBox1;
             comboBoxMidi.SelectedIndexChanged += ComboBoxMidi_SelectedIndexChanged;
@@ -109,7 +113,6 @@ namespace midiboy
             }
         }
 
-
         private void MidiIn_ErrorReceived(object sender, MidiInMessageEventArgs e)
         {
             // エラーメッセージをTextBoxに表示
@@ -117,6 +120,50 @@ namespace midiboy
             {
                 textBox1.AppendText($"MIDI Error Received: {e.MidiEvent}\r\n");
             }));
+        }
+
+        private void InitializeCustomComponents()
+        {
+            dataGridView = new DataGridView
+            {
+                Dock = DockStyle.Top,
+                Height = 200,
+                AutoGenerateColumns = false
+            };
+
+            dataGridView.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "MIDI Note", DataPropertyName = "MidiNote" });
+            dataGridView.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Note Name", DataPropertyName = "NoteName" });
+            dataGridView.Columns.Add(new DataGridViewComboBoxColumn { HeaderText = "Key", DataPropertyName = "Key", DataSource = Enum.GetValues(typeof(Keys)) });
+
+            saveButton = new Button { Text = "Save", Dock = DockStyle.Top };
+            saveButton.Click += SaveButton_Click;
+
+            loadButton = new Button { Text = "Load", Dock = DockStyle.Top };
+            loadButton.Click += LoadButton_Click;
+
+            Controls.Add(dataGridView);
+            Controls.Add(saveButton);
+            Controls.Add(loadButton);
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            SaveMappings();
+        }
+
+        private void LoadButton_Click(object sender, EventArgs e)
+        {
+            LoadMappings();
+        }
+
+        private void SaveMappings()
+        {
+            // Save mappings logic here
+        }
+
+        private void LoadMappings()
+        {
+            // Load mappings logic here
         }
     }
 }
