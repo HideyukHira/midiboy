@@ -30,6 +30,8 @@
         {
             textBox1 = new TextBox();
             comboBox1 = new ComboBox();
+            dataGridView1 = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // textBox1
@@ -47,15 +49,26 @@
             comboBox1.Size = new Size(212, 38);
             comboBox1.TabIndex = 1;
             // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(14, 69);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidth = 72;
+            dataGridView1.Size = new Size(943, 262);
+            dataGridView1.TabIndex = 2;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1005, 666);
+            Controls.Add(dataGridView1);
             Controls.Add(comboBox1);
             Controls.Add(textBox1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "MIDI BOY";
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -64,5 +77,6 @@
 
         private TextBox textBox1;
         private ComboBox comboBox1;
+        private DataGridView dataGridView1;
     }
 }
