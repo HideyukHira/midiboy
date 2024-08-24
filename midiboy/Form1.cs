@@ -9,14 +9,14 @@ namespace midiboy
     {
         private MidiIn midiIn;
         private ComboBox comboBoxMidi;
-        private DataGridView dataGridView;
+       
         private Button saveButton;
         private Button loadButton;
 
         public Form1()
         {
             InitializeComponent();
-            InitializeCustomComponents();
+            
             // comboBoxMidi へ comboBox1 を代入
             comboBoxMidi = comboBox1;
             comboBoxMidi.SelectedIndexChanged += ComboBoxMidi_SelectedIndexChanged;
@@ -73,45 +73,17 @@ namespace midiboy
         {
             if (e.MidiEvent is NoteOnEvent noteOnEvent)
             {
-                // Note On イベントを処理
-                HandleNoteOn(noteOnEvent);
+                textBox1.AppendText($"MIDI Error Received: {e.MidiEvent}\r\n");
+              
             }
             else if (e.MidiEvent is NoteEvent noteEvent && noteEvent.CommandCode == MidiCommandCode.NoteOff)
             {
-                // Note Off イベントを処理
-                HandleNoteOff(noteEvent);
+               
             }
         }
 
-        private void HandleNoteOn(NoteOnEvent noteOnEvent)
-        {
-            // ノート番号をキーコードに変換
-            Keys key = ConvertNoteToKey(noteOnEvent.NoteNumber);
-            // キーの押下をシミュレート
-            SendKeys.SendWait(key.ToString());
-        }
 
-        private void HandleNoteOff(NoteEvent noteEvent)
-        {
-            // ノート番号をキーコードに変換
-            Keys key = ConvertNoteToKey(noteEvent.NoteNumber);
-            // キーのリリースをシミュレート（必要に応じて実装）
-            // SendKeys.SendWait("{UP " + key.ToString() + "}");
-        }
 
-        private Keys ConvertNoteToKey(int noteNumber)
-        {
-            // ノート番号をキーコードに変換するロジックを実装
-            // 例: C4 (ノート番号60) を A キーにマッピング
-            switch (noteNumber)
-            {
-                case 60: return Keys.A;
-                case 61: return Keys.W;
-                case 62: return Keys.S;
-                // 他のノート番号も同様にマッピング
-                default: return Keys.None;
-            }
-        }
 
         private void MidiIn_ErrorReceived(object sender, MidiInMessageEventArgs e)
         {
@@ -122,29 +94,6 @@ namespace midiboy
             }));
         }
 
-        private void InitializeCustomComponents()
-        {
-            dataGridView = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 200,
-                AutoGenerateColumns = false
-            };
-
-            dataGridView.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "MIDI Note", DataPropertyName = "MidiNote" });
-            dataGridView.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Note Name", DataPropertyName = "NoteName" });
-            dataGridView.Columns.Add(new DataGridViewComboBoxColumn { HeaderText = "Key", DataPropertyName = "Key", DataSource = Enum.GetValues(typeof(Keys)) });
-
-            saveButton = new Button { Text = "Save", Dock = DockStyle.Top };
-            saveButton.Click += SaveButton_Click;
-
-            loadButton = new Button { Text = "Load", Dock = DockStyle.Top };
-            loadButton.Click += LoadButton_Click;
-
-            Controls.Add(dataGridView);
-            Controls.Add(saveButton);
-            Controls.Add(loadButton);
-        }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
