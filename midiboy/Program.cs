@@ -1,8 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.Windows.Forms;
-using NAudio.Midi;
-
 namespace midiboy
 {
     internal static class Program
@@ -17,7 +12,7 @@ namespace midiboy
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-     
+
 
             Application.Run(new Form1());
         }

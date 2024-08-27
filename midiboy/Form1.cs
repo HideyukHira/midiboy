@@ -1,7 +1,5 @@
-using System;
-using System.Diagnostics;
-using System.Windows.Forms;
 using NAudio.Midi;
+using System.Diagnostics;
 
 namespace midiboy
 {
@@ -17,12 +15,15 @@ namespace midiboy
         public Form1()
         {
             InitializeComponent();
+            dataGridView = dataGridView1; // ここで初期化
             InitializeCustomComponents();
             // comboBoxMidi へ comboBox1 を代入
             comboBoxMidi = comboBox1;
             comboBoxMidi.SelectedIndexChanged += ComboBoxMidi_SelectedIndexChanged;
             LoadMidiDevices();
 
+            // 確認用のデバッグ出力
+            Debug.WriteLine("Form1 constructor executed.");
             // デバッグ出力にMIDIデバイスのリストを出力
             Debug.WriteLine("Available MIDI Input Devices:");
             for (int device = 0; device < MidiIn.NumberOfDevices; device++)
@@ -32,7 +33,6 @@ namespace midiboy
 
             // フィールドの初期化
             noteToKeyMap = new Dictionary<int, Keys>();
-            dataGridView = new DataGridView();
             saveButton = new Button();
             loadButton = new Button();
         }
@@ -45,9 +45,11 @@ namespace midiboy
             {
                 if (row.Cells["MidiNote"].Value != null && row.Cells["Key"].Value != null)
                 {
-                    int noteNumber = (int)row.Cells["MidiNote"].Value;
-                    Keys key = (Keys)row.Cells["Key"].Value;
-                    noteToKeyMap[noteNumber] = key;
+                    if (int.TryParse(row.Cells["MidiNote"].Value.ToString(), out int noteNumber) &&
+                        Enum.TryParse(row.Cells["Key"].Value.ToString(), out Keys key))
+                    {
+                        noteToKeyMap[noteNumber] = key;
+                    }
                 }
             }
         }
@@ -157,8 +159,19 @@ namespace midiboy
         {
             dataGridView = dataGridView1;
 
-            dataGridView.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "MIDI Note", DataPropertyName = "MidiNote" });
-            dataGridView.Columns.Add(new DataGridViewComboBoxColumn { HeaderText = "Key", DataPropertyName = "Key", DataSource = Enum.GetValues(typeof(Keys)) });
+            dataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "MIDI Note",
+                DataPropertyName = "MidiNote",
+                Name = "MidiNote" // ここで列名を設定
+            });
+
+            dataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Key",
+                DataPropertyName = "Key",
+                Name = "Key" // ここで列名を設定
+            });
 
             saveButton = new Button { Text = "Save", Dock = DockStyle.Bottom, Height = 60 };
             saveButton.Click += SaveButton_Click;
@@ -183,12 +196,87 @@ namespace midiboy
 
         private void SaveMappings()
         {
-            // Save mappings logic here
+            string filePath = "mappings.txt";
+
+            try
+            {
+                Debug.WriteLine("Starting SaveMappings method.");
+
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    Debug.WriteLine("StreamWriter initialized.");
+
+                    foreach (DataGridViewRow row in dataGridView.Rows)
+                    {
+                        // デバッグ出力で行の情報を確認
+                        Debug.WriteLine($"Row Index: {row.Index}");
+
+                        if (row.Cells["MidiNote"].Value != null && row.Cells["Key"].Value != null)
+                        {
+                            if (int.TryParse(row.Cells["MidiNote"].Value.ToString(), out int noteNumber))
+                            {
+                                string? keyString = row.Cells["Key"].Value?.ToString();
+
+                                // デバッグ出力でセルの値を確認
+                                Debug.WriteLine($"Note Number: {noteNumber}, Key String: {keyString}");
+
+                                // キー文字列を Keys 列挙型に変換（大文字小文字を区別しない）
+                                if (keyString != null && Enum.TryParse(keyString, true, out Keys key))
+                                {
+                                    writer.WriteLine($"{noteNumber},{key}");
+                                    Debug.WriteLine($"Written to file: {noteNumber},{key}");
+                                }
+                                else
+                                {
+                                    Debug.WriteLine($"Failed to parse key: {keyString}");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Debug.WriteLine("Mappings saved successfully.");
+                MessageBox.Show("Mappings saved successfully.", "Save Mappings", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                // 例外の詳細をデバッグ出力
+                Debug.WriteLine($"Exception: {ex.Message}");
+                Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                // 例外の詳細をメッセージボックスに表示
+                MessageBox.Show($"An error occurred while saving mappings: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadMappings()
         {
-            // Load mappings logic here
+            string filePath = "mappings.txt";
+
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show("Mapping file not found.", "Load Mappings", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                dataGridView.Rows.Clear();
+                noteToKeyMap.Clear();
+
+                string? line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] parts = line.Split(',');
+                    if (parts.Length == 2 && int.TryParse(parts[0], out int noteNumber) && Enum.TryParse(parts[1], out Keys key))
+                    {
+                        dataGridView.Rows.Add(noteNumber, key);
+                        noteToKeyMap[noteNumber] = key;
+                    }
+                }
+            }
+
+            MessageBox.Show("Mappings loaded successfully.", "Load Mappings", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
