@@ -35,6 +35,9 @@ namespace midiboy
             noteToKeyMap = new Dictionary<int, Keys>();
             saveButton = new Button();
             loadButton = new Button();
+
+            // 初期化時にマッピングをロード
+            LoadMappings();
         }
 
         private void InitializeNoteToKeyMap()
@@ -255,8 +258,15 @@ namespace midiboy
 
             if (!File.Exists(filePath))
             {
-                MessageBox.Show("Mapping file not found.", "Load Mappings", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                // ファイルが存在しない場合は初期値を書き込む
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    // 初期値の例
+                    writer.WriteLine("36,E"); // MIDIノート60をキーAにマッピング
+                    writer.WriteLine("62,B"); // MIDIノート62をキーBにマッピング
+                }
+
+                MessageBox.Show("Mapping file not found. A new file with default mappings has been created.", "Load Mappings", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             using (StreamReader reader = new StreamReader(filePath))
